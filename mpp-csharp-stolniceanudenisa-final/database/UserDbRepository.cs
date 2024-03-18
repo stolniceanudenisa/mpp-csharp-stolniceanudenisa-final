@@ -18,15 +18,39 @@ public class UserDbRepository:IUserRepository
         this.props = props;
     }
 
-
+ 
     public User findOne(long id)
     {
-        throw new NotImplementedException();
+        log.InfoFormat("Entering UserDbRepository findOne with value {0}", id);
+        IDbConnection con = DBUtils.getConnection(props);
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "SELECT * FROM users WHERE user_id = @id";
+            IDbDataParameter paramId = comm.CreateParameter();
+            paramId.ParameterName = "@id";
+            paramId.Value = id;
+            comm.Parameters.Add(paramId);
+            using (var dataR = comm.ExecuteReader())
+            {
+                if (dataR.Read())
+                {
+                    // long idUser = dataR.GetInt64(0);
+                    String username = dataR.GetString(1);
+                    String password = dataR.GetString(2);
+                    //User user = new User(idUser, username, password);
+                    User user = new User(username, password);
+                    log.InfoFormat("Exiting UserDbRepository findOne with value {0}", user);
+                    return user;
+                }
+            }
+        }
+        log.InfoFormat("Exiting UserDbRepository findOne with value {0}", null);
+        return null;
     }
 
     public IEnumerable<User> GetAll()
     {
-        log.Info("Entering GetAll Users");
+        log.Info("Entering UserDbRepository GetAll Users");
         IDbConnection con = DBUtils.getConnection(props);
         IList<User> users = new List<User>();
         using (var comm = con.CreateCommand())
@@ -46,7 +70,7 @@ public class UserDbRepository:IUserRepository
                 }
             }
         }
-        log.Info("Exiting GetAll Users");
+        log.Info("Exiting UserDbRepository GetAll Users");
         return users;
     }
 
@@ -62,7 +86,7 @@ public class UserDbRepository:IUserRepository
                 
                 command.CommandText = "INSERT INTO users( username, password) VALUES ( @username, @password)";
             
-                // IDbDataParameter paramId = command.CreateParameter();
+                // IDbDataParameter paramId = command.CreateParameter();   
                 // paramId.ParameterName = "@id";
                 // paramId.Value = entity.id;
                 // command.Parameters.Add(paramId);

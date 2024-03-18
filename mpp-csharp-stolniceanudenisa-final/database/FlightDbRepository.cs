@@ -20,72 +20,119 @@ public class FlightDbRepository: IFlightRepository
     
     public Flight findOne(long id)
     {
-        throw new NotImplementedException();
+        log.InfoFormat("Entering FlightDbRepository findOne with value {0}", id);
+        IDbConnection con = DBUtils.getConnection(props);
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "SELECT * FROM flights WHERE flight_id = @id";
+            IDbDataParameter paramId = comm.CreateParameter();
+            paramId.ParameterName = "@id";
+            paramId.Value = id;
+            comm.Parameters.Add(paramId);
+            using (var dataR = comm.ExecuteReader())
+            {
+                if (dataR.Read())
+                {
+                    long flightId = dataR.GetInt32(0);
+                    var destination = dataR.GetString(1);
+                    
+                    long unixTimestamp = dataR.GetInt64(2);
+                    var departureDateTime = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestamp).UtcDateTime;
+                
+                    var airport = dataR.GetString(3);
+                    var availableSeats = dataR.GetInt32(4);
+    
+                    Flight flight = new Flight(destination, departureDateTime, airport, availableSeats);
+                    flight.id = flightId;
+                    log.InfoFormat("Exiting FlightDbRepository findOne with value {0}", flight);
+                    return flight;
+                }
+            }
+        }
+        log.InfoFormat("Exiting FlightDbRepository findOne with value {0}", null);
+        return null;
     }
-
+    
+    
+  
+    
     public IEnumerable<Flight> GetAll()
     {
-        log.Info("Entering GetAll Flights");
+        log.Info("Entering FlightDbRepository GetAll Flights");
         IDbConnection con = DBUtils.getConnection(props);
         IList<Flight> flights = new List<Flight>();
-        // using (var comm = con.CreateCommand())
-        // {
-        //     comm.CommandText = "SELECT * FROM flights";
-        //
-        //     using (var dataR = comm.ExecuteReader())
-        //     {
-        //         while (dataR.Read())
-        //         {
-        //             long id = dataR.GetInt64(0);
-        //             String username = dataR.GetString(1);
-        //             String password = dataR.GetString(2);
-        //             
-        //             
-        //             Flight flight = new Flight(id, username, password);
-        //            
-        //             flights.Add(flight);
-        //         }
-        //     }
-        // }
-        log.Info("Exiting GetAll Flights");
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "SELECT * FROM flights";
+        
+            using (var dataR = comm.ExecuteReader())
+            {
+                while (dataR.Read())
+                {
+                    long id = dataR.GetInt32(0);
+                    var destination = dataR.GetString(1);
+                
+                    // Parse the Unix timestamp to a DateTime object
+                    long unixTimestamp = dataR.GetInt64(2);
+                    var departureDateTime = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestamp).UtcDateTime;
+                
+                    var airport = dataR.GetString(3);
+                    var availableSeats = dataR.GetInt32(4);
+
+                    Flight flight = new Flight(destination, departureDateTime, airport, availableSeats);
+                    flight.id = id;
+                    flights.Add(flight);
+                }
+            }
+        }
+        log.Info("Exiting FlightDbRepository GetAll Flights");
         return flights;
     }
 
+ 
     public void Add(Flight entity)
     {
-        log.InfoFormat("Entering FlightDbRepository Add value {0}", entity);
-        using(IDbConnection connection = DBUtils.getConnection(props))
+    log.InfoFormat("Entering FlightDbRepository Add value {0}", entity);
+    using (IDbConnection connection = DBUtils.getConnection(props))
+    {
+        log.InfoFormat("FlightDbRepository Add opened connection to database {0}", connection);
+        using (IDbCommand command = connection.CreateCommand())
         {
-            log.InfoFormat("FlightDbRepository Add opened connection to database {0}", connection);
-            // using (IDbCommand command = connection.CreateCommand())
-            // {
-            //     command.CommandText = "INSERT INTO flights(user_id, username, password) VALUES (@id, @username, @password)";
-            //
-            //     IDbDataParameter paramId = command.CreateParameter();
-            //     paramId.ParameterName = "@id";
-            //     paramId.Value = entity.id;
-            //     command.Parameters.Add(paramId);
-            //
-            //     IDbDataParameter paramUsername = command.CreateParameter();
-            //     paramUsername.ParameterName = "@username";
-            //     paramUsername.Value = entity.Username;
-            //     command.Parameters.Add(paramUsername);
-            //
-            //     IDbDataParameter paramPassword = command.CreateParameter();
-            //     paramPassword.ParameterName = "@password";
-            //     paramPassword.Value = entity.Password;
-            //     command.Parameters.Add(paramPassword);
-            //     
-            //     var result = command.ExecuteNonQuery();
-            //     if (result == 0)
-            //     {
-            //         log.Error("FlightDbRepository Add failed!");
-            //         throw new Exception("No flight added !");
-            //     }
-            // }
+            command.CommandText = "INSERT INTO flights(destination, departure_date_time, airport, available_seats) VALUES (@destination, @departureDateTime, @airport, @availableSeats)";
+
+            IDbDataParameter paramDestination = command.CreateParameter();
+            paramDestination.ParameterName = "@destination";
+            paramDestination.Value = entity.Destination;
+            command.Parameters.Add(paramDestination);
+
+            // Convert departureDateTime to Unix timestamp
+            long unixTimestamp = (long)(entity.DepartureDateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
+            IDbDataParameter paramDepartureDateTime = command.CreateParameter();
+            paramDepartureDateTime.ParameterName = "@departureDateTime";
+            paramDepartureDateTime.Value = unixTimestamp;
+            command.Parameters.Add(paramDepartureDateTime);
+
+            IDbDataParameter paramAirport = command.CreateParameter();
+            paramAirport.ParameterName = "@airport";
+            paramAirport.Value = entity.Airport;
+            command.Parameters.Add(paramAirport);
+
+            IDbDataParameter paramAvailableSeats = command.CreateParameter();
+            paramAvailableSeats.ParameterName = "@availableSeats";
+            paramAvailableSeats.Value = entity.AvailableSeats;
+            command.Parameters.Add(paramAvailableSeats);
+
+            var result = command.ExecuteNonQuery();
+            if (result == 0)
+            {
+                log.Error("FlightDbRepository Add failed!");
+                throw new Exception("No flight added!");
+            }
         }
-        log.InfoFormat("Exiting FlightDbRepository Add with value {0}", entity);
     }
+    log.InfoFormat("Exiting FlightDbRepository Add with value {0}", entity);
+    }
+
 
     public void Clear()
     {
@@ -101,25 +148,68 @@ public class FlightDbRepository: IFlightRepository
     {
         log.InfoFormat("Entering FlightDbRepository Delete with value {0}", id);
         IDbConnection con = DBUtils.getConnection(props);
-        // using (var comm = con.CreateCommand())
-        // {
-        //     comm.CommandText = "DELETE FROM users WHERE user_id=@id";
-        //     IDbDataParameter paramId = comm.CreateParameter();
-        //     paramId.ParameterName = "@id";
-        //     paramId.Value = id;
-        //     comm.Parameters.Add(paramId);
-        //     var result = comm.ExecuteNonQuery();
-        //     if (result == 0)
-        //     {
-        //         log.Error("FlightDbRepository Delete failed!");
-        //         throw new Exception("No user deleted !");
-        //     }
-        // }
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "DELETE FROM flights WHERE flight_id = @id";
+            IDbDataParameter paramId = comm.CreateParameter();
+            paramId.ParameterName = "@id";
+            paramId.Value = id;
+            comm.Parameters.Add(paramId);
+            var result = comm.ExecuteNonQuery();
+            if (result == 0)
+            {
+                log.Error("FlightDbRepository Delete failed!");
+                throw new Exception("No user deleted !");
+            }
+        }
         log.InfoFormat("Exiting FlightDbRepository Delete with value {0}", id);
     }
-
+    
+ 
     public IEnumerable<Flight> FindFlightByDestinationAndDate(string destination, DateTime dateTime)
     {
-        throw new NotImplementedException();
+        
+        log.InfoFormat("Entering FlightDbRepository FindFlightByDestinationAndDate with value {0}", destination);
+        IDbConnection con = DBUtils.getConnection(props);
+        IList<Flight> flights = new List<Flight>();
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "SELECT * FROM flights WHERE destination = @destination AND departure_date_time = @departureDateTime";
+            IDbDataParameter paramDestination = comm.CreateParameter();
+            paramDestination.ParameterName = "@destination";
+            paramDestination.Value = destination;
+            comm.Parameters.Add(paramDestination);
+            
+            // Convert departureDateTime to Unix timestamp
+            long unixTimestamp = (long)(dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
+            IDbDataParameter paramDepartureDateTime = comm.CreateParameter();
+            paramDepartureDateTime.ParameterName = "@departureDateTime";
+            paramDepartureDateTime.Value = unixTimestamp;
+            comm.Parameters.Add(paramDepartureDateTime);
+            
+            using (var dataR = comm.ExecuteReader())
+            {
+                while (dataR.Read())
+                {
+                    long id = dataR.GetInt32(0);
+                    var destinationFlight = dataR.GetString(1);
+                
+                    // Parse the Unix timestamp to a DateTime object
+                    long unixTimestampFlight = dataR.GetInt64(2);
+                    var departureDateTime = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampFlight).UtcDateTime;
+                
+                    var airport = dataR.GetString(3);
+                    var availableSeats = dataR.GetInt32(4);
+
+                    Flight flight = new Flight(destinationFlight, departureDateTime, airport, availableSeats);
+                    flight.id = id;
+                    flights.Add(flight);
+
+                    log.InfoFormat("Exiting FlightDbRepository FindFlightByDestinationAndDate  with value {0}", flight);
+                }
+            }
+        }
+        log.Info("Exiting FlightDbRepository FindFlightByDestinationAndDate");
+        return flights;
     }
 }
