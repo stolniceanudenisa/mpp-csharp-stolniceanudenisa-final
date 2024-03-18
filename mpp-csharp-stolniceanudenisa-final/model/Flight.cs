@@ -9,7 +9,7 @@ namespace mpp_csharp_stolniceanudenisa_final.model
         public string Airport { get; set; }
         public int AvailableSeats { get; set; }
 
-        public Flight(long id, string destination, DateTime departureDateTime, string airport, int availableSeats):base(id)
+        public Flight(long id, string destination, DateTime departureDateTime, string airport, int availableSeats) //:base(id)
         {
             Destination = destination;
             DepartureDateTime = departureDateTime;

@@ -5,7 +5,7 @@
         public string Name { get; set; }
          public string Address { get; set; }
          
-         public Client(long id, string name, string address):base(id)
+         public Client(long id, string name, string address) //:base(id)
          {
              Name = name;
              Address = address;

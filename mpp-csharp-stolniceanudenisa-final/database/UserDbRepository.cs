@@ -37,10 +37,11 @@ public class UserDbRepository:IUserRepository
             {
                 while (dataR.Read())
                 {
-                    long id = dataR.GetInt64(0);
+                   // long id = dataR.GetInt64(0);
                     String username = dataR.GetString(1);
                     String password = dataR.GetString(2);
-                    User user = new User(id, username, password);
+                    //User user = new User(id, username, password);
+                    User user = new User( username, password);
                     users.Add(user);
                 }
             }
@@ -51,37 +52,40 @@ public class UserDbRepository:IUserRepository
 
     public void Add(User entity)
     {
-        log.InfoFormat("Entering Add User value {0}", entity);
-        IDbConnection con = DBUtils.getConnection(props);
-
-        using (var comm = con.CreateCommand())
+        log.InfoFormat("Entering UserDbRepository Add value {0}", entity);
+        using(IDbConnection connection = DBUtils.getConnection(props))
         {
-            comm.CommandText = "INSERT INTO users(user_id, username, password)  values (@id,@Username, @Password)";
-            
-            var paramId = comm.CreateParameter();
-            paramId.ParameterName = "@id";
-            paramId.Value = entity.id;
-            comm.Parameters.Add(paramId);
-            
-            var paramName = comm.CreateParameter();
-            paramName.ParameterName = "@username";
-            paramName.Value = entity.Username;
-            comm.Parameters.Add(paramName);
-
-            var paramAddress = comm.CreateParameter();
-            paramAddress.ParameterName = "@password";
-            paramAddress.Value = entity.Password;
-            comm.Parameters.Add(paramAddress);
- 
-
-            var result = comm.ExecuteNonQuery();
-            if (result == 0)
+            log.InfoFormat("UserDbRepository Add opened connection to database {0}", connection);
+            using (IDbCommand command = connection.CreateCommand())
             {
-                log.Error("No user added !");
-                throw new Exception("No user added !");
+                //command.CommandText = "INSERT INTO users(user_id, username, password) VALUES (@id, @username, @password)";
+                
+                command.CommandText = "INSERT INTO users( username, password) VALUES ( @username, @password)";
+            
+                // IDbDataParameter paramId = command.CreateParameter();
+                // paramId.ParameterName = "@id";
+                // paramId.Value = entity.id;
+                // command.Parameters.Add(paramId);
+
+                IDbDataParameter paramUsername = command.CreateParameter();
+                paramUsername.ParameterName = "@username";
+                paramUsername.Value = entity.Username;
+                command.Parameters.Add(paramUsername);
+
+                IDbDataParameter paramPassword = command.CreateParameter();
+                paramPassword.ParameterName = "@password";
+                paramPassword.Value = entity.Password;
+                command.Parameters.Add(paramPassword);
+                
+                var result = command.ExecuteNonQuery();
+                if (result == 0)
+                {
+                    log.Error("UserDbRepository Add failed!");
+                    throw new Exception("No user added !");
+                }
             }
         }
-        log.InfoFormat("Succesfully added user value {0}", entity);
+        log.InfoFormat("Exiting UserDbRepository Add with value {0}", entity);
     }
 
     public void Clear()
@@ -96,12 +100,52 @@ public class UserDbRepository:IUserRepository
 
     public void Delete(long id)
     {
-        throw new NotImplementedException();
+        log.InfoFormat("Entering UserDbRepository Delete with value {0}", id);
+        IDbConnection con = DBUtils.getConnection(props);
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "DELETE FROM users WHERE user_id=@id";
+            IDbDataParameter paramId = comm.CreateParameter();
+            paramId.ParameterName = "@id";
+            paramId.Value = id;
+            comm.Parameters.Add(paramId);
+            var result = comm.ExecuteNonQuery();
+            if (result == 0)
+            {
+                log.Error("UserDbRepository Delete failed!");
+                throw new Exception("No user deleted !");
+            }
+        }
+        log.InfoFormat("Exiting UserDbRepository Delete with value {0}", id);
     }
 
     public bool ExistsUser(string username, string password)
     {
-        throw new NotImplementedException();
+        log.InfoFormat("Entering ExistsUser with username {0}", username);
+        IDbConnection con = DBUtils.getConnection(props);
+        using (var comm = con.CreateCommand())
+        {
+            comm.CommandText = "SELECT * FROM users WHERE username=@username AND password=@password";
+            IDbDataParameter paramUsername = comm.CreateParameter();
+            paramUsername.ParameterName = "@username";
+            paramUsername.Value = username;
+            comm.Parameters.Add(paramUsername);
+            IDbDataParameter paramPassword = comm.CreateParameter();
+            paramPassword.ParameterName = "@password";
+            paramPassword.Value = password;
+            comm.Parameters.Add(paramPassword);
+
+            using (var dataR = comm.ExecuteReader())
+            {
+                if (dataR.Read())
+                {
+                    log.InfoFormat("Exiting ExistsUser with value {0}", true);
+                    return true;
+                }
+            }
+        }
+        log.InfoFormat("Exiting ExistsUser with value {0}", false);
+        return false;
     }
 
     public User FindUserByCredentials(string username, string password)
@@ -125,10 +169,12 @@ public class UserDbRepository:IUserRepository
             {
                 if (dataR.Read())
                 {
-                    long idUser = dataR.GetInt64(0);
+                   // long idUser = dataR.GetInt64(0);
                     String usernameUser = dataR.GetString(1);
                     String passwordUser = dataR.GetString(2);
-                    User user = new User(idUser, usernameUser, passwordUser);
+                    //User user = new User(idUser, usernameUser, passwordUser);
+                    User user = new User(usernameUser, passwordUser);
+                    
                     log.InfoFormat("Exiting FindUserByCredentials with value {0}", user);
                     return user;
                 }

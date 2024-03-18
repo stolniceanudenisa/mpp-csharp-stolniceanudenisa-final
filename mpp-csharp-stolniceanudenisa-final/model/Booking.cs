@@ -8,7 +8,7 @@ namespace mpp_csharp_stolniceanudenisa_final.model
          public Client Client { get; set; }
          public List<string> Passengers { get; set; }
 
-         public Booking(long id, Flight flight, Client client, List<string> passengers):base(id)
+         public Booking(long id, Flight flight, Client client, List<string> passengers) //:base(id)
          {
              Flight = flight;
              Client = client;

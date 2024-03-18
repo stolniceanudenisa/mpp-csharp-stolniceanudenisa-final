@@ -32,9 +32,7 @@ namespace mpp_csharp_stolniceanudenisa_final
             // }
             //
             
-            
-            
-            
+           
             //configurare jurnalizare folosind log4net in fisier xml
             // XmlConfigurator.Configure(new System.IO.FileInfo("apptest.config"));
             //
@@ -50,14 +48,18 @@ namespace mpp_csharp_stolniceanudenisa_final
             
             Console.WriteLine("Users");
             UserDbRepository repo = new UserDbRepository(props2);
-            // repo.Add(new User(999,"ioana12_","091232"));
-            // repo.FindUserByCredentials("mihai_ilie","123"); //merge
+            // repo.Add(new User(1001,"ana12_","091232"));         // dupa add mi se inchide conexiunea de remediat !!!!!!!!!!!!!!!
+           // repo.Add(new User("mihaela","091232")); 
+            
+            // repo.FindUserByCredentials("mihai_ilie","123");
+            // repo.Delete(1000);
+            
+           
+            
             foreach (User user in repo.GetAll())
             {
                 Console.WriteLine(user);
             }
-            
-            
             
             
             static string GetConnectionStringByName(string name)
