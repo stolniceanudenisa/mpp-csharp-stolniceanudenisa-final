@@ -15,8 +15,8 @@ namespace mpp_csharp_stolniceanudenisa_final
         public static void Main(string[] args)
         {
 
-            log.Info("Iunie!");
-            Console.WriteLine("E bine");
+            // log.Info("Iunie!");
+            // Console.WriteLine("E bine");
             
   
             //metoda 1
@@ -48,7 +48,7 @@ namespace mpp_csharp_stolniceanudenisa_final
             
             Console.WriteLine("Users");
             UserDbRepository repoUser = new UserDbRepository(props2);
-            // repo.Add(new User(1001,"ana12_","091232"));         // dupa add mi se inchide conexiunea de remediat !!!!!!!!!!!!!!!
+            // repo.Add(new User(1001,"ana12_","091232"));                                        // dupa add mi se inchide conexiunea de remediat !!!!!!!!!!!!!!!
             // repo.Add(new User("mihaela","091232")); 
             // repoUser.findOne(2);
             // repo.FindUserByCredentials("mihai_ilie","123");

@@ -11,14 +11,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.mpp-csharp-stolniceanudenisa-final.dir/.idea/copilot/chatSessions/00000000000.xd" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.mpp-csharp-stolniceanudenisa-final.dir/.idea/copilot/chatSessions/00000000000.xd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.mpp-csharp-stolniceanudenisa-final.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.mpp-csharp-stolniceanudenisa-final.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/BookingDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/database/BookingDbRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/ClientDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/database/ClientDbRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/FlightDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/database/FlightDbRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/UserDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/database/UserDbRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Booking.cs" beforeDir="false" afterPath="$PROJECT_DIR$/model/Booking.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/model/Client.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Entity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/model/Entity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Flight.cs" beforeDir="false" afterPath="$PROJECT_DIR$/model/Flight.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +86,9 @@
       <updated>1710663980384</updated>
       <workItem from="1710663982009" duration="18000" />
       <workItem from="1710741181841" duration="2200000" />
-      <workItem from="1710758708675" duration="6276000" />
+      <workItem from="1710758708675" duration="6298000" />
+      <workItem from="1710786565525" duration="2173000" />
+      <workItem from="1710928980353" duration="559000" />
     </task>
     <task id="LOCAL-00001" summary="ramas FlightDbRepository si BookingDbRepository">
       <option name="closed" value="true" />
@@ -104,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710743322172</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="lab week 4 finished">
+      <option name="closed" value="true" />
+      <created>1710765857030</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1710765857030</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +116,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="ramas FlightDbRepository si BookingDbRepository" />
-    <option name="LAST_COMMIT_MESSAGE" value="ramas FlightDbRepository si BookingDbRepository" />
+    <MESSAGE value="lab week 4 finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="lab week 4 finished" />
   </component>
 </project>

@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mpp-csharp-stolniceanudenis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionUtils", "ConnectionUtils\ConnectionUtils.csproj", "{D45E3A8C-4FB8-4622-B4F8-AD4AA052B38C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientCsharp", "ClientCsharp\ClientCsharp.csproj", "{5423357B-5BE8-4034-9D3C-E9C8095FC087}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D45E3A8C-4FB8-4622-B4F8-AD4AA052B38C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D45E3A8C-4FB8-4622-B4F8-AD4AA052B38C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D45E3A8C-4FB8-4622-B4F8-AD4AA052B38C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5423357B-5BE8-4034-9D3C-E9C8095FC087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5423357B-5BE8-4034-9D3C-E9C8095FC087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5423357B-5BE8-4034-9D3C-E9C8095FC087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5423357B-5BE8-4034-9D3C-E9C8095FC087}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
